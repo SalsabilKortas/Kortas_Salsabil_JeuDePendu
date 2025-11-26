@@ -12,9 +12,10 @@ const scoreDisplay = document.getElementById("score");
 const bestScoreDisplay = document.getElementById("bestScore");
 const restartBtn = document.getElementById("restart");
 
-//innitialisation des variables
+//initialisation des variables
 let selectedWord = ""; //mot à deviner
 let guessed = []; //tableau qui contient less lettres devinées correctement
+let errors = 0; //nombre d'erreur(s)
 
 /*charger les mots du fichier json
 fetch("words.json")
@@ -31,4 +32,38 @@ function displayWord() {
         .split("") //transformer le mot à deviner en tableau de lettres
         .map(letter => guessed.includes(letter) ? letter : "_") //afficher la lettre si elle est bien devinée sinon afficher "_"
         .join(" ");
+
+    //si la partie est gagnée (le mot est bien deviné)
+    if (!wordContainer.innerHTML.includes("_")) {
+        wordContainer.classList.add("win");
+    }
+}
+
+//clavier virtuel pour distinguer les lettres fausses
+function createKeyboard() {
+    keyboard.innerHTML = "";
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+    letters.forEach(letter => {
+        const key = document.createElement("div");
+        key.classList.add("key");
+        key.textContent = letter;
+
+        key.onclick = () => handleGuess(letter, key);
+        keyboard.appendChild(key);
+    });
+}
+
+function handleGuess(letter, keyElement) {
+    keyElement.classList.add("disabled"); //desactiver la touche apres usage
+
+    if (selectedWord.includes(letter)) { // si la lettre est correcte
+        guessed.push(letter); //ajouter la lettre au tableau des lettres devinées 
+    } else {
+        errors++;
+        errorDisplay.textContent = errors;
+        if (errors >= 7) return gameOver(); // arreter la partie si le nombre d'erreur dépasse la limite
+    }
+
+    displayWord();
 }
