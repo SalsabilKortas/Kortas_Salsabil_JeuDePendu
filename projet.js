@@ -27,6 +27,21 @@ fetch("words.json")
     .catch(err => console.error("erreur chargement json :", err));
 let WORDS = []; //tableau qui contient les mots du fichier json*/
 
+//nouvelle partie
+function newGame() {
+    if (WORDS.length === 0) return;
+
+    selectedWord = WORDS[Math.floor(Math.random() * WORDS.length)]; //choix aleatoire du mot à deviner
+    guessed = [];
+    errors = 0;
+    errorDisplay.textContent = errors;
+
+    createKeyboard();
+    displayWord();
+}
+
+restartBtn.onclick = newGame;
+
 function displayWord() {
     wordContainer.innerHTML = selectedWord
         .split("") //transformer le mot à deviner en tableau de lettres
@@ -36,6 +51,7 @@ function displayWord() {
     //si la partie est gagnée (le mot est bien deviné)
     if (!wordContainer.innerHTML.includes("_")) {
         wordContainer.classList.add("win");
+        setTimeout(newGame, 1500);
     }
 }
 
@@ -67,3 +83,13 @@ function handleGuess(letter, keyElement) {
 
     displayWord();
 }
+
+//partie perdue
+function gameOver() {
+    keyboard.querySelectorAll(".key").forEach(k => k.classList.add("disabled")); //desactiver toutess les touches
+    wordContainer.innerHTML = selectedWord; //afficher le mot à deviner
+    wordContainer.classList.remove("win");
+
+    setTimeout(newGame, 2000);
+}
+
