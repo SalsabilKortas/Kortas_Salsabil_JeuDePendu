@@ -16,6 +16,10 @@ const restartBtn = document.getElementById("restart");
 let selectedWord = ""; //mot à deviner
 let guessed = []; //tableau qui contient less lettres devinées correctement
 let errors = 0; //nombre d'erreur(s)
+let score = 0; //score
+let bestScore = localStorage.getItem("bestScore") || 0; //meilleur score
+
+bestScoreDisplay.textContent = bestScore;
 
 /*charger les mots du fichier json
 fetch("words.json")
@@ -50,6 +54,10 @@ function displayWord() {
 
     //si la partie est gagnée (le mot est bien deviné)
     if (!wordContainer.innerHTML.includes("_")) {
+        score++;
+        scoreDisplay.textContent = score;
+        updateBestScore();
+
         wordContainer.classList.add("win");
         setTimeout(newGame, 1500);
     }
@@ -89,7 +97,18 @@ function gameOver() {
     keyboard.querySelectorAll(".key").forEach(k => k.classList.add("disabled")); //desactiver toutess les touches
     wordContainer.innerHTML = selectedWord; //afficher le mot à deviner
     wordContainer.classList.remove("win");
+    score = 0;
+    scoreDisplay.textContent = score;
 
     setTimeout(newGame, 2000);
+}
+
+//meilleur score
+function updateBestScore() {
+    if (score > bestScore) {
+        bestScore = score;
+        bestScoreDisplay.textContent = bestScore;
+        localStorage.setItem("bestScore", bestScore);
+    }
 }
 
