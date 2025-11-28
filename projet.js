@@ -12,6 +12,11 @@ const scoreDisplay = document.getElementById("score");
 const bestScoreDisplay = document.getElementById("bestScore");
 const restartBtn = document.getElementById("restart");
 
+// Canvas
+const canvas = document.getElementById("hangman");
+const ctx = canvas.getContext("2d");
+
+
 //initialisation des variables
 let selectedWord = ""; //mot à deviner
 let guessed = []; //tableau qui contient less lettres devinées correctement
@@ -34,6 +39,8 @@ let WORDS = []; //tableau qui contient les mots du fichier json*/
 //nouvelle partie
 function newGame() {
     if (WORDS.length === 0) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height); //effacer le canvas
 
     selectedWord = WORDS[Math.floor(Math.random() * WORDS.length)]; //choix aleatoire du mot à deviner
     guessed = [];
@@ -86,6 +93,7 @@ function handleGuess(letter, keyElement) {
     } else {
         errors++;
         errorDisplay.textContent = errors;
+        drawHangman(errors);
         if (errors >= 7) return gameOver(); // arreter la partie si le nombre d'erreur dépasse la limite
     }
 
@@ -112,3 +120,60 @@ function updateBestScore() {
     }
 }
 
+//dessin du pendu
+function drawHangman(step) {
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#fff";
+
+    switch (step) {
+        case 1:
+            ctx.beginPath();
+            ctx.moveTo(20, 180);
+            ctx.lineTo(180, 180);
+            ctx.stroke();
+            break;
+
+        case 2:
+            ctx.beginPath();
+            ctx.moveTo(50, 180);
+            ctx.lineTo(50, 20);
+            ctx.stroke();
+            break;
+
+        case 3:
+            ctx.beginPath();
+            ctx.moveTo(50, 20);
+            ctx.lineTo(140, 20);
+            ctx.stroke();
+            break;
+
+        case 4:
+            ctx.beginPath();
+            ctx.moveTo(140, 20);
+            ctx.lineTo(140, 50);
+            ctx.stroke();
+            break;
+
+        case 5:
+            ctx.beginPath();
+            ctx.arc(140, 65, 15, 0, Math.PI * 2);
+            ctx.stroke();
+            break;
+
+        case 6:
+            ctx.beginPath();
+            ctx.moveTo(140, 80);
+            ctx.lineTo(140, 130);
+            ctx.stroke();
+            break;
+
+        case 7:
+            ctx.beginPath();
+            ctx.moveTo(140, 90);
+            ctx.lineTo(120, 110);
+            ctx.moveTo(140, 90);
+            ctx.lineTo(160, 110);
+            ctx.stroke();
+            break;
+    }
+}

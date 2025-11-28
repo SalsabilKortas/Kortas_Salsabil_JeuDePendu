@@ -67,6 +67,12 @@ button:hover {
     background: white;
 }
 
+canvas {
+    background: rgba(255,255,255,0.1);
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
 .win {
     animation: pulse 0.8s infinite alternate;
 }
